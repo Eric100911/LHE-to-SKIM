@@ -1,0 +1,27 @@
+Universe        = vanilla
+Executable      = wrapper.sh
+Arguments       = $(LHE) $(MINIAOD) $(x509userproxy)
+Output          = logs/job_$(JobId)_$(ClusterId).stdout
+Error           = logs/job_$(JobId)_$(ClusterId).stderr
+Log             = logs/job_$(JobId)_$(ClusterId).log
+
+# These lines transfer the wrapper and required files to the worker node.
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files    = wrapper.sh,\
+                          JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_GENSIM.py,\
+                          JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RAW.py,\
+                          JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RECO.py,\
+                          JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_SKIM.py,\
+
+# Change to match your experiment's requirements
+request_cpus    = 2
+request_memory  = 12 GB
+request_disk    = 4 GB
++JobFlavour     = "workday"
+
+# If your jobs require a proxy to access EOS, set it up like this:
+x509userproxy = /afs/cern.ch/user/c/chiw/condor/x509up
+
+# Queue jobs using a file with LHE and MiniAOD output paths, space-separated
+queue LHE, MINIAOD from LHE_sources.txt

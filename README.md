@@ -8,6 +8,12 @@ This chain is designed to operate on HTCondor, and is intended to be run on a la
 
 ## How to Use
 
+For usual cases, submit using the `Makefile` is the safest way.
+
+1. Prepare the `LHE_sources.txt` file with the paths to the LHE files and their corresponding output MiniAOD file names.
+2. Conduct a `make dryrun` to check the jobs that will be submitted.
+3. If everything looks good, run `make submit` to submit the jobs to HTCondor.
+
 ## Implementation
 
 ### HTCondor jobs
