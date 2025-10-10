@@ -32,7 +32,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RAW.root'),
+    fileNames = cms.untracked.vstring('file:step2_RAW.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -83,7 +83,7 @@ process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('')
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-    fileName = cms.untracked.string('file:JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_AOD.root'),
+    fileName = cms.untracked.string('file:step3_AOD.root'),
     outputCommands = process.AODSIMEventContent.outputCommands
 )
 

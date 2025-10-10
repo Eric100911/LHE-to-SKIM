@@ -5,7 +5,7 @@
 INPUT_LHE="$1"
 OUTPUT_MINIAOD="$2"
 X509_CERT="$3"
-LHE_LOCAL="JJY_TPS_test.lhe"
+LHE_LOCAL="input.lhe"
 HOME_DIR=$(pwd)
 
 # Log prefix for output files: extract from the input LHE file name.
@@ -20,9 +20,9 @@ export SCRAM_ARCH=el8_amd64_gcc12
 # 3. Set up CMSSW_12_4_14_patch3 for GEN-SIM, RAW, RECO.
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 scram project -n CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO CMSSW_12_4_14_patch3
-cp JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_GENSIM.py CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
-cp JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RAW.py    CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
-cp JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RECO.py   CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
+cp HadronizerGENSIM_13p6TeV_TuneCP5_pythia8_Run3Summer22.py CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
+cp DIGI_13p6TeV_TuneCP5_pythia8_Run3Summer22.py    CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
+cp RECO_13p6TeV_TuneCP5_pythia8_Run3Summer22.py   CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
 # - Copy the LHE file to the CMSSW source directory also.
 cp "$INPUT_LHE"                                                "CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/$LHE_LOCAL"
 cd CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src
@@ -30,33 +30,33 @@ eval `scram runtime -sh`
 
 # 4. Run the GEN-SIM, RAW, RECO step. Using user-defined configuration all the way.
 # - The intermidiate files are stored in the current directory and are designed to link up.
-cmsRun JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_GENSIM.py -j FrameworkJob_${LOG_PREFIX}_GENSIM.xml
-cmsRun JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RAW.py    -j FrameworkJob_${LOG_PREFIX}_RAW.xml
-cmsRun JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_RECO.py   -j FrameworkJob_${LOG_PREFIX}_RECO.xml
+cmsRun HadronizerGENSIM_13p6TeV_TuneCP5_pythia8_Run3Summer22.py -j FrameworkJob_${LOG_PREFIX}_GENSIM.xml
+cmsRun DIGI_13p6TeV_TuneCP5_pythia8_Run3Summer22.py    -j FrameworkJob_${LOG_PREFIX}_RAW.xml
+cmsRun RECO_13p6TeV_TuneCP5_pythia8_Run3Summer22.py   -j FrameworkJob_${LOG_PREFIX}_RECO.xml
 # - The output root file is stored in the current directory.
 # - The produced framework output files are moved to $HOME_DIR
 # mv FrameworkJob_${LOG_PREFIX}_GENSIM.xml "$HOME_DIR/FrameworkJob_${LOG_PREFIX}_GENSIM.xml"
 # mv FrameworkJob_${LOG_PREFIX}_RAW.xml    "$HOME_DIR/FrameworkJob_${LOG_PREFIX}_RAW.xml"
 # mv FrameworkJob_${LOG_PREFIX}_RECO.xml   "$HOME_DIR/FrameworkJob_${LOG_PREFIX}_RECO.xml"
-mv JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_AOD.root "$HOME_DIR/JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_AOD.root"
+mv step3_AOD.root "$HOME_DIR/step3_AOD.root"
 
 # 5. Create a new directory for the MINIAOD step.
 # - Unset the "cmsenv" to avoid conflicts.
 eval `scram unsetenv -sh`
 cd "$HOME_DIR"
 scram project -n CMSSW_13_0_13_MINIAOD CMSSW_13_0_13
-cp JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_SKIM.py CMSSW_13_0_13_MINIAOD/src/
+cp Mini_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22.py CMSSW_13_0_13_MINIAOD/src/
 cd CMSSW_13_0_13_MINIAOD/src
 eval `scram runtime -sh`
 
 # 6. Move the AOD file to the new directory.
-cp "$HOME_DIR/JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_AOD.root" .
+cp "$HOME_DIR/step3_AOD.root" .
 
 # 7. Run the MINIAOD step.
-cmsRun JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_SKIM.py -j FrameworkJob_${LOG_PREFIX}_MINIAOD.xml
+cmsRun Mini_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22.py -j FrameworkJob_${LOG_PREFIX}_MINIAOD.xml
 
 # 8. Collect and send away the output MiniAOD file.
-mv JJY1S_TPS_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22_MiniAOD.root "$OUTPUT_MINIAOD"
+mv step4_MiniAOD.root "$OUTPUT_MINIAOD"
 
 # 9. Collect log files for retrieval.
 # mv "FrameworkJob_${LOG_PREFIX}_MINIAOD.xml" "$HOME_DIR/FrameworkJob_${LOG_PREFIX}_MINIAOD.xml"
