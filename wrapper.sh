@@ -45,7 +45,7 @@ mv step3_AOD.root "$HOME_DIR/step3_AOD.root"
 eval `scram unsetenv -sh`
 cd "$HOME_DIR"
 scram project -n CMSSW_13_0_13_MINIAOD CMSSW_13_0_13
-cp Mini_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22.py CMSSW_13_0_13_MINIAOD/src/
+cp Mini_13p6TeV_TuneCP5_pythia8_Run3Summer22.py CMSSW_13_0_13_MINIAOD/src/
 cd CMSSW_13_0_13_MINIAOD/src
 eval `scram runtime -sh`
 
@@ -53,7 +53,7 @@ eval `scram runtime -sh`
 cp "$HOME_DIR/step3_AOD.root" .
 
 # 7. Run the MINIAOD step.
-cmsRun Mini_6Mu_13p6TeV_TuneCP5_pythia8_Run3Summer22.py -j FrameworkJob_${LOG_PREFIX}_MINIAOD.xml
+cmsRun Mini_13p6TeV_TuneCP5_pythia8_Run3Summer22.py -j FrameworkJob_${LOG_PREFIX}_MINIAOD.xml
 
 # 8. Collect and send away the output MiniAOD file.
 mv step4_MiniAOD.root "$OUTPUT_MINIAOD"
