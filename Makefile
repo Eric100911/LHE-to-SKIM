@@ -3,7 +3,8 @@
 CONFIG_FILES = $(shell cat config_file_list.txt)
 
 submit: x509up cmssw_configs.tar
-	condor_submit LHE-to-SKIM.sub
+	mkdir -p logs && condor_submit LHE-to-SKIM.sub
+	cp LHE_source.txt logs/
 
 cmssw_configs.tar: $(CONFIG_FILES)
 	tar -cvf cmssw_configs.tar $(CONFIG_FILES)
