@@ -24,6 +24,7 @@ cp HadronizerGENSIM_13p6TeV_TuneCP5_pythia8_Run3Summer22.py CMSSW_12_4_14_patch3
 cp DIGI_13p6TeV_TuneCP5_pythia8_Run3Summer22.py    CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
 cp RECO_13p6TeV_TuneCP5_pythia8_Run3Summer22.py   CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/
 # - Copy the LHE file to the CMSSW source directory also.
+echo ">>> Copying LHE file ${INPUT_LHE}."
 cp "$INPUT_LHE"                                                "CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src/$LHE_LOCAL"
 cd CMSSW_12_4_14_patch3_GEN-SIM-RAW-RECO/src
 eval `scram runtime -sh`
@@ -56,6 +57,7 @@ cp "$HOME_DIR/step3_AOD.root" .
 cmsRun Mini_13p6TeV_TuneCP5_pythia8_Run3Summer22.py -j FrameworkJob_${LOG_PREFIX}_MINIAOD.xml
 
 # 8. Collect and send away the output MiniAOD file.
+echo "Copy output MiniAOD to ${OUTPUT_MINIAOD}"
 mv step4_MiniAOD.root "$OUTPUT_MINIAOD"
 
 # 9. Collect log files for retrieval.
