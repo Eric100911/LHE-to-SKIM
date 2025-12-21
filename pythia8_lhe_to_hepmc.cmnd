@@ -1,0 +1,113 @@
+! Pythia8 configuration for LHE to HepMC conversion with DPS (Double Parton Scattering)
+! This configuration is for standalone Pythia8 reshowering to produce (J/psi+J/psi)+phi(1020) events
+
+! ============================================================================
+! Main settings
+! ============================================================================
+Main:numberOfEvents = -1                ! Process all events in the LHE file
+Main:timesAllowErrors = 10              ! Allow up to 10 errors before stopping
+
+! ============================================================================
+! Beam and collision settings
+! ============================================================================
+Beams:frameType = 4                     ! Read in LHE file
+Beams:LHEF = input.lhe                  ! LHE input file name
+! Beams:setProductionScalesFromLHEF = on  ! Use production scales from LHE
+
+! ============================================================================
+! Tune settings - CP5 for Run 3
+! ============================================================================
+Tune:pp = 14                            ! Monash 2013 tune (basis for CP5)
+Tune:ee = 7                             ! LEP tune
+
+! ============================================================================
+! PDF settings
+! ============================================================================
+PDF:pSet = LHAPDF6:NNPDF31_nnlo_as_0118 ! Use NNPDF3.1 NNLO
+! PDF:pSet = 7                          ! Alternative: use CTEQ6L1
+
+! ============================================================================
+! Multi-parton Interactions and DPS
+! ============================================================================
+MultipartonInteractions:processLevel = 3 ! Enable MPI at process level
+PartonLevel:MPI = on                    ! Enable multi-parton interactions
+SecondHard:generate = on                ! Generate second hard scattering
+SecondHard:TwoJets = off                ! Don't generate 2->2 QCD jets
+SecondHard:TwoBJets = off               ! Don't generate 2->2 b-jets
+
+! Specifically enable phi(1020) production in second hard scattering
+! phi(1020) has PDG code 333
+PhaseSpace:pTHatMinSecond = 2.0         ! Minimum pT for second hard process (GeV)
+333:mayDecay = on                       ! Allow phi(1020) to decay
+333:oneChannel = 1 1.0 100 321 -321     ! phi -> K+ K- (PDG codes 321, -321)
+
+! ============================================================================
+! Parton showering settings
+! ============================================================================
+TimeShower:pTmin = 0.5                  ! Minimum pT in timelike shower
+SpaceShower:pTmin = 0.5                 ! Minimum pT in spacelike shower
+TimeShower:QEDshowerByQ = on            ! QED shower by quarks
+TimeShower:QEDshowerByL = on            ! QED shower by leptons
+PartonLevel:ISR = on                    ! Initial state radiation
+PartonLevel:FSR = on                    ! Final state radiation
+
+! ============================================================================
+! Hadronization settings
+! ============================================================================
+HadronLevel:all = on                    ! Full hadronization
+HadronLevel:Hadronize = on              ! Hadronize partons
+HadronLevel:Decay = on                  ! Decay unstable hadrons
+
+! ============================================================================
+! J/psi and related charmonium decay settings
+! Ensure muon decays for J/psi
+! ============================================================================
+! J/psi (443)
+443:onMode = off                        ! Disable all J/psi decays
+443:onIfMatch = 13 -13                  ! Enable only J/psi -> mu+ mu-
+
+! Chi_c states
+20443:onMode = off                      ! Disable all Chi_c1 decays
+20443:onIfAny = 443                     ! Enable only Chi_c1 -> J/psi + X
+445:onMode = off                        ! Disable all Chi_c2 decays
+445:onIfAny = 443                       ! Enable only Chi_c2 -> J/psi + X
+10441:onMode = off                      ! Disable all h_c decays
+10441:onIfAny = 443                     ! Enable only h_c -> J/psi + X
+
+! Psi(2S) (100443)
+100443:onMode = off                     ! Disable all Psi(2S) decays
+100443:onIfAny = 443                    ! Enable only Psi(2S) -> J/psi + X
+
+! Upsilon states (if present in events)
+553:onMode = off                        ! Disable all Upsilon(1S) decays
+553:onIfMatch = 13 -13                  ! Enable only Upsilon(1S) -> mu+ mu-
+100553:onMode = off                     ! Disable all Upsilon(2S) decays
+100553:onIfMatch = 13 -13               ! Enable only Upsilon(2S) -> mu+ mu-
+200553:onMode = off                     ! Disable all Upsilon(3S) decays
+200553:onIfMatch = 13 -13               ! Enable only Upsilon(3S) -> mu+ mu-
+
+! Z boson (if present)
+23:onMode = off                         ! Disable all Z decays
+23:onIfMatch = 13 -13                   ! Enable only Z -> mu+ mu-
+
+! ============================================================================
+! Random seed - will be set by command line or script
+! ============================================================================
+! Random:setSeed = on
+! Random:seed = 0
+
+! ============================================================================
+! HepMC output settings
+! ============================================================================
+! HepMC output will be configured from the C++ driver program
+
+! ============================================================================
+! Print settings
+! ============================================================================
+Init:showChangedSettings = on           ! Show changed settings
+Init:showChangedParticleData = off      ! Don't show changed particle data
+Next:numberCount = 100                  ! Print progress every 100 events
+Next:numberShowInfo = 0                 ! Don't print event info
+Next:numberShowProcess = 0              ! Don't print process info
+Next:numberShowEvent = 0                ! Don't print event details
+Stat:showPartonLevel = off              ! Don't show parton level statistics

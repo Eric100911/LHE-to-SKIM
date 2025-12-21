@@ -5,3 +5,15 @@ logs/*
 *.root
 *.txt*
 !config_file_list.txt
+# Build artifacts
+event_splitter
+pythia8_lhe_to_hepmc
+*.o
+# HepMC files
+*.hepmc
+*.hepmc.gz
+# LHE chunks
+lhe_chunks/
+hepmc_chunks/
+# CMSSW areas
+CMSSW_*/

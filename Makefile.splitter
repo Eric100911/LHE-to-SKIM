@@ -1,0 +1,24 @@
+# Makefile for building event_splitter utility
+# Splits LHE files into smaller chunks for parallel processing
+
+CXX = g++
+CXXFLAGS = -std=c++11 -O2 -Wall -Wextra -pedantic
+
+SRC = event_splitter.cpp
+TARGET = event_splitter
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	@echo "Building $(TARGET)..."
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+	@echo "Build complete: $(TARGET)"
+
+clean:
+	rm -f $(TARGET)
+
+test: $(TARGET)
+	@echo "Testing $(TARGET) with --help..."
+	./$(TARGET) --help || true

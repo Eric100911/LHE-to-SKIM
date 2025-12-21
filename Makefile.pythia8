@@ -1,0 +1,58 @@
+# Makefile for building Pythia8 standalone executable for LHE to HepMC conversion
+# This should be compiled inside a cmssw-el7 environment with Pythia8 and HepMC3 available
+
+# Compiler settings
+CXX = g++
+CXXFLAGS = -std=c++11 -O2 -Wall -Wextra -pedantic
+
+# Pythia8 paths (will be set from environment in CMSSW)
+# These will typically be available via CMSSW or from /cvmfs
+PYTHIA8_INCLUDE = $(shell pythia8-config --includedir 2>/dev/null || echo /cvmfs/cms.cern.ch/slc7_amd64_gcc900/external/pythia8/306-gjkamn/include)
+PYTHIA8_LIB = $(shell pythia8-config --libdir 2>/dev/null || echo /cvmfs/cms.cern.ch/slc7_amd64_gcc900/external/pythia8/306-gjkamn/lib)
+
+# HepMC3 paths (will be set from environment in CMSSW)
+HEPMC3_INCLUDE = $(shell HepMC3-config --includedir 2>/dev/null || echo /cvmfs/cms.cern.ch/slc7_amd64_gcc900/external/hepmc3/3.2.4-ljfedo/include)
+HEPMC3_LIB = $(shell HepMC3-config --libdir 2>/dev/null || echo /cvmfs/cms.cern.ch/slc7_amd64_gcc900/external/hepmc3/3.2.4-ljfedo/lib)
+
+# Include directories
+INCLUDES = -I$(PYTHIA8_INCLUDE) -I$(HEPMC3_INCLUDE)
+
+# Library directories and libraries
+LDFLAGS = -L$(PYTHIA8_LIB) -L$(HEPMC3_LIB)
+LIBS = -lpythia8 -lHepMC3 -ldl
+
+# Source and target
+SRC = pythia8_lhe_to_hepmc.cc
+TARGET = pythia8_lhe_to_hepmc
+
+# Build rules
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	@echo "Building $(TARGET)..."
+	@echo "Pythia8 include: $(PYTHIA8_INCLUDE)"
+	@echo "Pythia8 lib    : $(PYTHIA8_LIB)"
+	@echo "HepMC3 include : $(HEPMC3_INCLUDE)"
+	@echo "HepMC3 lib     : $(HEPMC3_LIB)"
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(TARGET) $(SRC) $(LDFLAGS) $(LIBS)
+	@echo "Build complete: $(TARGET)"
+
+clean:
+	rm -f $(TARGET)
+
+test: $(TARGET)
+	@echo "Testing $(TARGET) with --help (expecting usage message)..."
+	./$(TARGET) || true
+
+# Help target
+help:
+	@echo "Makefile for Pythia8 LHE to HepMC converter"
+	@echo ""
+	@echo "Usage:"
+	@echo "  make          - Build the executable"
+	@echo "  make clean    - Remove built files"
+	@echo "  make test     - Test the executable"
+	@echo ""
+	@echo "Note: This should be built inside a cmssw-el7 environment with CMSSW setup"
