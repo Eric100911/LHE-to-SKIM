@@ -167,10 +167,8 @@ if [ ${USE_DPS_WORKFLOW} -eq 1 ]; then
             SUCCESSFUL_CHUNKS=$((SUCCESSFUL_CHUNKS + 1))
             
             # Compress HepMC chunk to save space
-            if [ -f "${HEPMC_OUTPUT}" ]; then
-                gzip "${HEPMC_OUTPUT}"
-                echo "    -> Compressed to ${HEPMC_OUTPUT}.gz"
-            fi
+            gzip "${HEPMC_OUTPUT}"
+            echo "    -> Compressed to ${HEPMC_OUTPUT}.gz"
         else
             echo "    -> FAILED (exit code: ${EXIT_CODE})"
             FAILED_CHUNKS=$((FAILED_CHUNKS + 1))

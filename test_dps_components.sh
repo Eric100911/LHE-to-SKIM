@@ -142,9 +142,9 @@ fi
 echo ""
 echo "Test 7: Testing HepMC compression..."
 cp test_merged.hepmc test_compression.hepmc
-ORIGINAL_SIZE=$(stat -f%z test_compression.hepmc 2>/dev/null || stat -c%s test_compression.hepmc)
+ORIGINAL_SIZE=$(wc -c < test_compression.hepmc)
 gzip test_compression.hepmc
-COMPRESSED_SIZE=$(stat -f%z test_compression.hepmc.gz 2>/dev/null || stat -c%s test_compression.hepmc.gz)
+COMPRESSED_SIZE=$(wc -c < test_compression.hepmc.gz)
 COMPRESSION_RATIO=$(echo "scale=1; 100 * (1 - $COMPRESSED_SIZE / $ORIGINAL_SIZE)" | bc)
 echo "✓ Compression test successful"
 echo "  - Original size   : ${ORIGINAL_SIZE} bytes"

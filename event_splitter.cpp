@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
 
   // --- Write footer and close all files ---
   std::cout << "Processed " << event_count
-            << " events. Writing footers and closing files..." << std:: endl;
+            << " events. Writing footers and closing files..." << std::endl;
   for (auto &f : out_files) {
     *f << footer_line;
     f->close();

@@ -62,7 +62,9 @@ for INPUT_FILE in "${INPUT_FILES[@]}"; do
         echo "  -> Wrote header and events from first file"
     else
         # Subsequent files: skip header, only append events
-        # HepMC format: skip lines until we see "E " (event record)
+        # NOTE: This assumes HepMC3 ASCII format where event records start with "E "
+        # For HepMC2 format, event records start with "HepMC::IO_GenEvent"
+        # If using different HepMC versions, this logic may need adjustment
         ${CAT_CMD} "${INPUT_FILE}" | awk '
             BEGIN { in_events = 0; }
             /^E / { in_events = 1; }

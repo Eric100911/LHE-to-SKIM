@@ -100,6 +100,10 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '124X_mcRun3_2022_realistic_v12', '')
 
 # Generator filter - for HepMC input, we use a passthrough
+# Note: abortOnUnknownPDGCode is set to False because DPS events may include
+# exotic particles or intermediate states from the second hard scattering that
+# are not in the standard PDG table. CMSSW will handle known particles and
+# skip unknown ones rather than aborting the job.
 process.generator = cms.EDProducer("GenParticleProducer",
     src = cms.InputTag("source"),
     abortOnUnknownPDGCode = cms.untracked.bool(False)

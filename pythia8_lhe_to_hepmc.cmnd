@@ -12,6 +12,9 @@ Main:timesAllowErrors = 10              ! Allow up to 10 errors before stopping
 ! ============================================================================
 Beams:frameType = 4                     ! Read in LHE file
 Beams:LHEF = input.lhe                  ! LHE input file name
+! Note: Beams:setProductionScalesFromLHEF is disabled to allow Pythia8
+! to set scales based on the second hard scattering process. Enable if
+! you want to preserve original LHE production scales.
 ! Beams:setProductionScalesFromLHEF = on  ! Use production scales from LHE
 
 ! ============================================================================
