@@ -1,0 +1,21 @@
+# Example LHE_sources.txt for DPS workflow
+# Format: <input_LHE> <output_MINIAOD> [optional_args]
+#
+# Optional arguments:
+#   --keep-hepmc              : Save intermediate HepMC file (compressed)
+#   --hepmc-dir <directory>   : Specify HepMC output directory
+#   --no-dps                  : Use standard workflow without DPS
+#
+# Examples:
+#
+# Standard DPS workflow (no HepMC saved):
+# /eos/user/c/chiw/JpsiJpsiUps/MC_samples/LHE/sample_001.lhe /eos/user/c/chiw/output/sample_001.root
+#
+# DPS workflow with HepMC saved (same directory as MiniAOD):
+# /eos/user/c/chiw/JpsiJpsiUps/MC_samples/LHE/sample_002.lhe /eos/user/c/chiw/output/sample_002.root --keep-hepmc
+#
+# DPS workflow with HepMC in separate directory:
+# /eos/user/c/chiw/JpsiJpsiUps/MC_samples/LHE/sample_003.lhe /eos/user/c/chiw/output/sample_003.root --keep-hepmc --hepmc-dir /eos/user/c/chiw/hepmc/
+#
+# Standard workflow (no DPS):
+# /eos/user/c/chiw/JpsiJpsiUps/MC_samples/LHE/sample_004.lhe /eos/user/c/chiw/output/sample_004.root --no-dps

@@ -5,6 +5,7 @@ logs/*
 *.root
 *.txt*
 !config_file_list.txt
+!LHE_sources.txt.example
 # Build artifacts
 event_splitter
 pythia8_lhe_to_hepmc
@@ -17,3 +18,7 @@ lhe_chunks/
 hepmc_chunks/
 # CMSSW areas
 CMSSW_*/
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
