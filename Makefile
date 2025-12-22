@@ -19,8 +19,8 @@ CXX = g++
 CXXFLAGS = --std=c++11 -Wall -O2 -g
 # Test files
 TEST_DIR = test
-TEST_LHE = $(TEST_DIR)/test1.lhe $(TEST_DIR)/test2.lhe
-TEST_HEPMC = $(TEST_DIR)/test1.hepmc $(TEST_DIR)/test2.hepmc
+TEST_LHE = $(wildcard $(TEST_DIR)/*.lhe)
+TEST_HEPMC = $(patsubst $(TEST_DIR)/%.lhe,$(TEST_DIR)/%.hepmc,$(TEST_LHE))
 TEST_HEPMC_OUT = $(TEST_DIR)/concatenated.hepmc
 
 submit: cmssw_configs.tar
