@@ -1,4 +1,5 @@
 DIGI_13p6TeV_TuneCP5_pythia8_Run3Summer22.py
-HadronizerGENSIM_13p6TeV_TuneCP5_pythia8_Run3Summer22.py
+HepMCtoSIM_Run3Summer22.py
 Mini_13p6TeV_TuneCP5_pythia8_Run3Summer22.py
 RECO_13p6TeV_TuneCP5_pythia8_Run3Summer22.py
+Pythia8_lhe.cmnd

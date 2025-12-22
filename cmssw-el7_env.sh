@@ -1,0 +1,9 @@
+source /cvmfs/sft.cern.ch/lcg/views/LCG_88b/x86_64-centos7-gcc62-opt/setup.sh
+export LD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/LCG_88b/Boost/1.62.0/x86_64-centos7-gcc62-opt/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2.0/x86_64-centos7-gcc62-opt/lib64:/opt/rh/gcc-toolset-12/root/usr/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/LCG_88b/Boost/1.62.0/x86_64-centos7-gcc62-opt/lib:$LD_LIBRARY_PATH
+export PATH=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2.0/x86_64-centos7-gcc62-opt/bin:/opt/rh/gcc-toolset-12/root/usr/bin:$PATH
+export PATH=/afs/cern.ch/user/c/chiw/public/cms-utils/HepMC-2.06.11/install:$PATH
+export LD_LIBRARY_PATH=/afs/cern.ch/user/c/chiw/public/cms-utils/HepMC-2.06.11/install/lib:$LD_LIBRARY_PATH
+export PATH=/afs/cern.ch/user/c/chiw/public/cms-utils/pythia8245:$PATH
+export LD_LIBRARY_PATH=/afs/cern.ch/user/c/chiw/public/cms-util/pythia8245/lib:$LD_LIBRARY_PATH
