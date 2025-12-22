@@ -1,22 +1,20 @@
 // Driver for using Pythia8 with lhe file to hep file
 
-#include "Pythia8/Pythia.h"
-#include "Pythia8Plugins/HepMC2.h"
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
+#include "Pythia8/Pythia.h"
+#include "Pythia8Plugins/HepMC2.h"
 #include <exception>
 
 using namespace Pythia8;
 
 //==========================================================================
 
-bool singleParticleFilter(const Event& event,
-                          unsigned int pdgID,
-                          double pTmin,
+bool singleParticleFilter(const Event &event, unsigned int pdgID, double pTmin,
                           double etaMax) {
   bool found = false;
   for (int i = 0; i < event.size(); ++i) {
-    const Particle& p = event[i];
+    const Particle &p = event[i];
     if (abs(p.id()) == pdgID) {
       if (p.pT() > pTmin && abs(p.eta()) < etaMax) {
         found = true;
@@ -27,38 +25,62 @@ bool singleParticleFilter(const Event& event,
   return found;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   Pythia pythia;
 
-  string inputname="Pythia8_lhe.cmnd",outputname="Pythia8_lhe.hep";
-  
+  string inputname = "Pythia8_lhe.cmnd", outputname = "Pythia8_lhe.hep";
+  string lhefile = "";
+
+  for (int i = 1; i < argc; ++i) {
+    string arg = argv[i];
+    if (arg == "--cmnd" && i + 1 < argc) {
+      inputname = argv[++i];
+    } else if (arg == "--output" && i + 1 < argc) {
+      outputname = argv[++i];
+    } else if (arg == "--lhef" && i + 1 < argc) {
+      lhefile = argv[++i];
+    }
+  }
+
   pythia.readFile(inputname.c_str());
+  // Allow override of LHEF input file, command file and output file from
+  // command line arguments.
+  // - Example: Pythia8.exe --lhef input.lhe --cmnd myPythia.cmnd --output
+  // myOutput.hep
+  if (!lhefile.empty()) {
+    pythia.readString("Beams:frameType = 4");
+    pythia.readString("Beams:LHEF = " + lhefile);
+  }
   // Re-shower: disable hadronization.
   pythia.init();
-  
-  int nAbort=10;
-  int nPrintLHA=1;
-  int iAbort=0;
-  int iPrintLHA=0;
-  int iEventshower=pythia.mode("Main:spareMode1");
-  int iEventShowerRepMax=pythia.mode("Main:spareMode2");
-  int iEventShowerRepCnt=0;
-  bool isValidEvent=false;
 
-  int showerRepBins=pythia.mode("Main:spareMode3") + 1; // Including the overflow or fail bin.
-  double showerRepMin=-0.5;
-  double showerRepMax= iEventShowerRepMax * (showerRepBins) / (showerRepBins - 1) + showerRepMin; // Fail bin added.
+  int nAbort = 10;
+  int nPrintLHA = 1;
+  int iAbort = 0;
+  int iPrintLHA = 0;
+  int iEventshower = pythia.mode("Main:spareMode1");
+  int iEventShowerRepMax = pythia.mode("Main:spareMode2");
+  int iEventShowerRepCnt = 0;
+  bool isValidEvent = false;
+
+  int showerRepBins =
+      pythia.mode("Main:spareMode3") + 1; // Including the overflow or fail bin.
+  double showerRepMin = -0.5;
+  double showerRepMax =
+      iEventShowerRepMax * (showerRepBins) / (showerRepBins - 1) +
+      showerRepMin; // Fail bin added.
 
   Hist iEventShowerRepCntHist("Number of re-shower attempts per event",
-                             showerRepBins,showerRepMin,showerRepMax);
+                              showerRepBins, showerRepMin, showerRepMax);
 
   HepMC::Pythia8ToHepMC ToHepMC;
   HepMC::IO_GenEvent ascii_io(outputname.c_str(), std::ios::out);
 
-  for (int iEvent = 0; ; ++iEvent) {
+  for (int iEvent = 0;; ++iEvent) {
     // cout << "[DEBUG] Begin with parton shower for event " << iEvent << endl;
     if (!pythia.next()) {
-      if (++iAbort < nAbort) continue;
+      if (++iAbort < nAbort)
+        continue;
       break;
     }
     // try{
@@ -67,13 +89,14 @@ int main() {
     //     break;
     //   }
     // }
-    // catch (std::exception& e) { 
+    // catch (std::exception& e) {
     //   cerr << "Fatal error: " << e.what() << endl;
     //   if (++iAbort < nAbort) continue;
     //   break;
     // }
     // cout << "[DEBUG] Completed parton shower for event " << iEvent << endl;
-    if (iEvent >= iEventshower) break;
+    if (iEvent >= iEventshower)
+      break;
     if (pythia.info.isLHA() && iPrintLHA < nPrintLHA) {
       pythia.LHAeventList();
       pythia.info.list();
@@ -82,15 +105,16 @@ int main() {
       ++iPrintLHA;
     }
     // Re-shower: Core loop. Ensure phi(1020) has pT > 4 GeV and |eta| < 2.5
-    iEventShowerRepCnt=0;
-    isValidEvent=false;
-    Event& event = pythia.event;
+    iEventShowerRepCnt = 0;
+    isValidEvent = false;
+    Event &event = pythia.event;
     Event savedPartonLevelEvent = event;
     // cout << "[DEBUG] Prepared to re-shower event "<< endl;
-    while(iEventShowerRepMax <= 0 || iEventShowerRepCnt < iEventShowerRepMax) {
+    while (iEventShowerRepMax <= 0 || iEventShowerRepCnt < iEventShowerRepMax) {
       ++iEventShowerRepCnt;
       // Re-shower: forceHadronLevel
-      if (!pythia.forceHadronLevel(false)) continue;
+      if (!pythia.forceHadronLevel(false))
+        continue;
       // try{
       //   if (!pythia.forceHadronLevel(false)) continue;
       // }
@@ -98,8 +122,9 @@ int main() {
       //   cerr << "Fatal error during re-showering: " << e.what() << endl;
       //   continue;
       // }
-      isValidEvent=singleParticleFilter(event,333,3.0,3.0);
-      if (isValidEvent) break;
+      isValidEvent = singleParticleFilter(event, 333, 3.0, 3.0);
+      if (isValidEvent)
+        break;
       // Re-shower: restore saved parton-level event.
       // if (iEventShowerRepCnt % 50 == 0) {
       //   cout << "[DEBUG] Re-shower attempt "<< iEventShowerRepCnt
@@ -109,19 +134,16 @@ int main() {
     }
     iEventShowerRepCntHist.fill(iEventShowerRepCnt);
     if (!isValidEvent && iEventShowerRepMax > 0) {
-      cout<<"Event "<< iEvent
-             <<" failed to produce a valid phi(1020) after "
-             << iEventShowerRepMax <<" attempts."
-             << endl;
+      cout << "Event " << iEvent
+           << " failed to produce a valid phi(1020) after "
+           << iEventShowerRepMax << " attempts." << endl;
       continue;
     } else if (isValidEvent) {
-      cout<<"Event "<< iEvent
-             <<" produced a valid phi(1020) after "
-             << iEventShowerRepCnt <<" attempts."
-             << endl;
+      cout << "Event " << iEvent << " produced a valid phi(1020) after "
+           << iEventShowerRepCnt << " attempts." << endl;
     }
 
-    HepMC::GenEvent* hepmcevt = new HepMC::GenEvent();
+    HepMC::GenEvent *hepmcevt = new HepMC::GenEvent();
     ToHepMC.fill_next_event(pythia, hepmcevt);
 
     ascii_io << hepmcevt;
@@ -132,4 +154,3 @@ int main() {
   cout << iEventShowerRepCntHist << endl;
   return 0;
 }
-  
