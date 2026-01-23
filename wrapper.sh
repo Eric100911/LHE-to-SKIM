@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Arguments: <INPUT_LHE> <OUTPUT_MINIAOD> <x509 certificate>
-# - Always restrict the name of showered output to a fixed name for simplicity.
+# - Always restrict the name of showered output to a fixed name for simplicity
 INPUT_LHE="$1"
 OUTPUT_MINIAOD="$2"
 X509_CERT="$3"
@@ -11,7 +11,8 @@ PYTHIA_CMND="Pythia8_lhe.cmnd"
 HOME_DIR=$(pwd)
 
 # Log prefix for output files: extract from the input LHE file name.
-LOG_PREFIX=$(basename "$INPUT_LHE" .hepmc)
+# Input files are LHE (".lhe") so strip that suffix for the log prefix.
+LOG_PREFIX=$(basename "$INPUT_LHE" .lhe)
 tar -xf cmssw_configs.tar
 
 # 1. Configure the x509 certificate
