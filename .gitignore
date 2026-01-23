@@ -1,7 +1,15 @@
 FrameworkJob*.xml
 local/*
 logs/*
+test/*
+build/*
+hepmc_showered/*
+lhe_splitted/*
+!test/test_sps_JpsiJpsi_86Evts.lhe
 *.log
+*.hepmc
+*.tar
 *.root
 *.txt*
 !config_file_list.txt
+x509up
